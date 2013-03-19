@@ -38,9 +38,11 @@
 |
 */
 
-$route['default_controller'] = "welcome";
+$route['default_controller'] = "api";
 $route['404_override'] = '';
 
+$route[':num/sync'] = "api/sync";
+$route[':num/card/:any'] = "api/card";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -23,14 +23,7 @@ class Node extends REST_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function permissions_get()
-	{
-		
-        $this->load->model('Node_model');
-		$data = $this->Node_model->get_permissions($this->get('node'), $this->get('card'));
-        echo $data;
-        //$this->response($data);
-	}
+
 	
 }
 	
