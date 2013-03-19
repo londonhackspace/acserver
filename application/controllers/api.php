@@ -20,10 +20,16 @@ class Api extends REST_Controller {
          */
 	public function card_get()
 	{
-        $this->load->model('Card_model');
-		$data = $this->Card_model->get_permissions($this->get('node'), $this->get('card'));
-        echo $data;
-        //$this->response($data);
+            $this->load->model('Card_model');
+            $node =  (int)$this->uri->segment(1);
+            $card =  $this->uri->segment(3);
+            $this->uri->segment(3) ."\n";
+            if($node && $card){
+		$result = $this->Card_model->get_permissions($node, $card);
+                if($result){
+                    $this->response($result);
+                }else print 0;
+            } print 0;
 	}
 	
 	public function card_post()
@@ -57,5 +63,89 @@ class Api extends REST_Controller {
         echo $data;
         //$this->response($data);
 	}
-	
+        
+        /*
+         * Check tool status
+            GET /[nodeID]/status/
+            Check if the ACNode has been remotely taken out of service, or put back in service
+            returns
+            0 - out of service
+            1 - in service
+
+         */
+        public function status_get()
+	{
+		
+        $this->load->model('Node_model');
+		$data = $this->Node_model->get_permissions($this->get('node'), $this->get('card'));
+        echo $data;
+        //$this->response($data);
+	}
+        
+        /*
+         *    Report tool status
+         *    PUT /[nodeID]/status/
+         *    i.e.
+         *    PUT /1/status/
+         *    1
+         *    0 - out of service
+         *    1 - in service
+         *    returns
+         *    0 - not saved
+         *    1 - saved
+
+         */
+        public function status_put()
+	{
+		
+        $this->load->model('Node_model');
+		$data = $this->Node_model->get_permissions($this->get('node'), $this->get('card'));
+        echo $data;
+        //$this->response($data);
+	}
+        
+        public function toolusetime_get()
+	{
+            
+        }
+        
+        public function toolusetime_put()
+	{
+            
+        }
+        
+        public function case_get()
+	{
+            
+        }
+        
+        public function case_put()
+	{
+            
+        }
+        
+        public function sync_get()
+	{
+             $this->response(1);
+        }
+        
+        public function getpermissions_get(){
+            $carddb_str = file_get_contents("/var/www/acserver/carddb.json");
+            $users=json_decode($carddb_str,true);
+            
+            foreach ($users as $user) {
+               if($user['nick'] == "As Seen On TV: Solexious"){
+                   print_r($user);
+               }
+            }
+            
+            
+            //$this->response($json_a);
+        }
+        
+        public function page_missing_get()
+	{
+             $this->response("0");
+        }
+        
 }

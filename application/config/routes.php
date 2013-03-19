@@ -39,10 +39,16 @@
 */
 
 $route['default_controller'] = "api";
-$route['404_override'] = '';
+//$route['404_override'] = 'api/page_missing';
 
+$route['getpermissions'] = "api/getpermissions";
 $route[':num/sync'] = "api/sync";
+$route[':num/sync/:any'] = "api/sync";
 $route[':num/card/:any'] = "api/card";
+$route[':num/permissions'] = "api/permissions";
+$route[':num/case/:any'] = "api/case";
+$route[':num/tooluse'] = "api/toolusetime";
+$route[':num/tooluse/time'] = "api/toolusetime";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

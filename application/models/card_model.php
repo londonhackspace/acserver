@@ -25,12 +25,27 @@
 		}
 		
 		public function get_permissions($node, $card){
-			$query = $this->db->get_where('permissions',array('node' => $node, 'card' => $card));
-			$results = $query->row_array();
-			if(!empty($results['permission']))
-				return $results['permission'];
-			else
-				return 0;
+//                      TODO: Tie into synced database
+//			$query = $this->db->get_where('permissions',array('node' => $node, 'card' => $card));
+//			$results = $query->row_array();
+//			if(!empty($results['permission']))
+//				return $results['permission'];
+//			else
+//				return 0;
+                    $sols_cards = array("04307922E42280","51DBC4CD","C7B7B20B","26515764","042D343A4F2380");
+                    $sols_nodes = array("1");
+                    $permission = 0;
+                    if($node ==1){
+                        //TestNode
+                        foreach ($sols_cards as $is_sols_card) {
+                            if ($card == $is_sols_card){
+                                $permission = 2;
+                            }
+                        } 
+                        
+                    }
+                    
+                    return $permission;
 		}
 	}
 ?>
