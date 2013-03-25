@@ -1,4 +1,8 @@
 Access Control Server
+=====================
+
+A RESTful server that works with the Access Control Nodes (https://github.com/solexious/ACNode)
+Protocol loosely based on http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal
 
 STATUS: Working, but very partial functionality and documentation
 
@@ -15,8 +19,6 @@ STATUS: Working, but very partial functionality and documentation
 - [ ] PUT /[nodeID]/case/
 
 
-A RESTful server that works with the Access Control Nodes (https://github.com/solexious/ACNode)
-Protocol loosely based on http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal
 
 Usage:
 curl http://[server]:[port]/[node_id]/card/[card_id]
