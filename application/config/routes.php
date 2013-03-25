@@ -41,7 +41,8 @@
 $route['default_controller'] = "api";
 //$route['404_override'] = 'api/page_missing';
 
-$route['getpermissions'] = "api/getpermissions";
+$route['sync_db'] = "api/sync_db";
+$route[':num/status'] = "api/status";
 $route[':num/sync'] = "api/sync";
 $route[':num/sync/:any'] = "api/sync";
 $route[':num/card/:any'] = "api/card";

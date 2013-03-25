@@ -17,35 +17,35 @@
 				return 0;
 		}
 		
-		public function add_card($newcard, $mastercard){
+		public function add_card($user_id,$newcard, $mastercard = null){
 			//Check if the card exists, and if it's already a maintainer
-			$datestring = "Year: %Y Month: %m Day: %d - %h:%i %a";
-			$this->db->insert('cards',array('card' => $newcard, 'added_by_card' => $mastercard, "added_on" => 'NOW()'));
+			$query = $this->db->where(array('card' =>$newcard))->get('cards');
+                        if($query->num_rows() == 0){
+                            $datestring = "Year: %Y Month: %m Day: %d - %h:%i %a";
+                            $this->db->insert('cards',array('card' => $newcard,
+                                'user_id' => $user_id, 
+                                'added_by_card' => $mastercard, 
+                                'added_on' => date('Y-m-d H:i:s')));
 			return $this->db->insert_id();
+                        }else{
+                            return null;
+                            
+                        }
+                        
+
 		}
 		
 		public function get_permissions($node, $card){
-//                      TODO: Tie into synced database
-//			$query = $this->db->get_where('permissions',array('node' => $node, 'card' => $card));
-//			$results = $query->row_array();
-//			if(!empty($results['permission']))
-//				return $results['permission'];
-//			else
-//				return 0;
-                    $sols_cards = array("04307922E42280","51DBC4CD","C7B7B20B","26515764","042D343A4F2380");
-                    $sols_nodes = array("1");
-                    $permission = 0;
-                    if($node ==1){
-                        //TestNode
-                        foreach ($sols_cards as $is_sols_card) {
-                            if ($card == $is_sols_card){
-                                $permission = 2;
-                            }
-                        } 
-                        
-                    }
-                    
-                    return $permission;
+                    $this->load->model(array('Card_model'));
+                    $user_results = $this->User_model->get_user($card);
+                    //$query = $this->db->get_where('permissions',array('node' => $node, 'card' => $card));
+//                    $results = $query->row_array();
+//                    if(!empty($results['permission']))
+//                            return $results['permission'];
+//                    else
+//                            return 0;
+//                    
+//                    return $permission;
 		}
 	}
 ?>

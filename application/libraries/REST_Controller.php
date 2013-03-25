@@ -360,7 +360,7 @@ abstract class REST_Controller extends CI_Controller
 		global $CFG;
 
 		// If data is empty and not code provide, error and bail
-		if (empty($data) && $http_code === null)
+		if (!isset($data) && $http_code === null)
 		{
 			$http_code = 404;
 
@@ -427,7 +427,7 @@ abstract class REST_Controller extends CI_Controller
 
 	/*
 	 * Detect SSL use
-	 *
+	 *  
 	 * Detect whether SSL is being used or not
 	 */
 	protected function _detect_ssl()
