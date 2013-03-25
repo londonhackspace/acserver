@@ -8,7 +8,7 @@ class Api extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('User_model', 'Card_model'));
+        $this->load->model(array('User_model','Tool_model', 'Card_model'));
     }
 
     /*
@@ -23,7 +23,6 @@ class Api extends REST_Controller {
      */
 
     public function card_get() {
-        $this->load->model('Card_model');
         $node = (int) $this->uri->segment(1);
         $card = $this->uri->segment(3);
         $this->uri->segment(3) . "\n";
@@ -78,11 +77,11 @@ class Api extends REST_Controller {
      */
 
     public function status_get() {
-
-        //$this->load->model('Node_model');
-        //$data = $this->Node_model->get_permissions($this->get('node'), $this->get('card'));
-        //echo "0";
-        $this->response(0);
+        $node = (int) $this->uri->segment(1);
+        print "node: " . $node;
+        $data = $this->Tool_model->get_satus($node);
+        
+        $this->response($data);
     }
 
     /*
