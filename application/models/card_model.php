@@ -35,17 +35,25 @@
 
 		}
 		
-		public function get_permissions($node, $card){
-                    $this->load->model(array('Card_model'));
-                    $user_results = $this->User_model->get_user($card);
-                    //$query = $this->db->get_where('permissions',array('node' => $node, 'card' => $card));
-//                    $results = $query->row_array();
-//                    if(!empty($results['permission']))
-//                            return $results['permission'];
-//                    else
-//                            return 0;
-//                    
-//                    return $permission;
+		public function has_permission($node, $card){
+		    
+		    $this->db->select('permissions.permission');
+    	    $this->db->where('cards.user_id', 'permissions.user_id', FALSE);
+    	    $this->db->where('tools.tool_id', 'permissions.tool_id', FALSE);
+    	    $this->db->where('permissions.permission', 1, FALSE);
+    	    $this->db->where('tools.status', 1, FALSE);
+    	    $this->db->where('tools.node', $node_id);
+    	    $this->db->where('cards.card', $card_id);
+    	    
+		    $this->db->from('permissions, cards, tools');
+            $query = $this->db->get();
+            
+            if ( $query->num_rows() > 0 ) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+            
 		}
 	}
 ?>
