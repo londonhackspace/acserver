@@ -81,7 +81,7 @@ class Api extends REST_Controller {
     public function status_get() {
         $node = (int) $this->uri->segment(1);
         print "node: " . $node;
-        $data = $this->Tool_model->get_satus($node);
+        $data = $this->Tool_model->get_status($node);
         
         $this->response($data);
     }

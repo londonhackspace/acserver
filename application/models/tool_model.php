@@ -7,7 +7,7 @@
 			$this->load->database();
 		}
 		
-		public function get_satus($tool_id){
+		public function get_status($tool_id){
 			$query = $this->db->get_where('tools',array('tool_id' => $tool_id));
 			$results = $query->row_array();
 			if(!empty($results)){
