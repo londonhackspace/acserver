@@ -23,17 +23,19 @@ class Api extends REST_Controller {
      */
 
     public function card_get() {
-        $node = (int) $this->uri->segment(1);
-        $card = $this->uri->segment(3);
+        $acnode_id = (int) $this->uri->segment(1);
+        $card_unique_identifier = $this->uri->segment(3);
         $this->uri->segment(3) . "\n";
-        if ($node && $card) {
-            $result = $this->Card_model->get_permissions($node, $card);
-            if ($result) {
-                $this->response($result);
-            }else
-                 $this->response(0);
-        } else
-             $this->response(0);
+        $result = 0;        // default to 0 for permission denied
+        
+        // If we've correctly been presented with a node and a card, then check to see what
+        // permission is associated with it
+        if ($acnode_id && $card_unique_identifier) {
+            $result = $this->Card_model->get_permission($acnode_id, $card_unique_identifier);
+        } else {
+            error_log("Cannot parse query string to determine the Node ($acnode_id) and Card ($card_unique_identifier) values to check");
+        }
+        $this->response($result);
     }
 
     public function card_post() {
@@ -42,7 +44,7 @@ class Api extends REST_Controller {
 
         foreach ($this->post() as $card_to_add => $card_added_by) {
             if (($card_to_add != "format") && ($card_to_add != "node")) {
-                if (get_permissions($this->post("node"), $card_added_by) == 2) {
+                if (get_permission($this->post("node"), $card_added_by) == 2) {
                     //TODO add user to the model and check in maintainer is adding a card that is not a maintainer on this node already
                     $this->response(1);
                 } else {
@@ -53,7 +55,7 @@ class Api extends REST_Controller {
 
 
 
-        // $data = $this->Card_model->get_permissions($this->get('node'), $this->get('card'));
+        // $data = $this->Card_model->get_permission($this->get('node'), $this->get('card'));
         // echo $data;
         //$this->response($data);
     }
@@ -61,7 +63,7 @@ class Api extends REST_Controller {
     public function permissions_get() {
 
         $this->load->model('Node_model');
-        $data = $this->Node_model->get_permissions($this->get('node'), $this->get('card'));
+        $data = $this->Node_model->get_permission($this->get('node'), $this->get('card'));
         echo $data;
         //$this->response($data);
     }
@@ -101,7 +103,7 @@ class Api extends REST_Controller {
     public function status_put() {
 
         $this->load->model('Node_model');
-        $data = $this->Node_model->get_permissions($this->get('node'), $this->get('card'));
+        $data = $this->Node_model->get_permission($this->get('node'), $this->get('card'));
         echo $data;
         //$this->response($data);
     }

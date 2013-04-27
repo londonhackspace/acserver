@@ -35,23 +35,29 @@
 
 		}
 		
-		public function has_permission($node, $card){
+		public function get_permission($acnode_id, $card_unique_identifier){
 		    
 		    $this->db->select('permissions.permission');
-    	    $this->db->where('cards.user_id', 'permissions.user_id', FALSE);
-    	    $this->db->where('tools.tool_id', 'permissions.tool_id', FALSE);
-    	    $this->db->where('permissions.permission', 1, FALSE);
-    	    $this->db->where('tools.status', 1, FALSE);
-    	    $this->db->where('tools.node', $node_id);
-    	    $this->db->where('cards.card', $card_id);
+		    
+    	    $this->db->where('acnodes.acnode_id', $acnode_id);
+    	    $this->db->where('cards.card_unique_identifier', $card_unique_identifier);
+
+            // Ensure the tool status is 'in service' (status = 1)
+    	    $this->db->where('tools.status', 1);
+
+            // Relationships
+    	    $this->db->where('tools.tool_id', 'acnodes.tool_id', FALSE);
+    	    $this->db->where('permissions.tool_id', 'tools.tool_id', FALSE);
+    	    $this->db->where('permissions.user_id', 'cards.user_id', FALSE);
     	    
-		    $this->db->from('permissions, cards, tools');
+		    $this->db->from('permissions, cards, tools, acnodes');
             $query = $this->db->get();
             
-            if ( $query->num_rows() > 0 ) {
-                return TRUE;
+            if ( $query->num_rows() == 1 ) {
+                $row = $query->row();
+                return (int) $row->permission;            // Return the permission value stored - which may be 0, 1, or 2 (No permissions, user, or maintainer)
             } else {
-                return FALSE;
+                return 0;                           // If they aren't in the system, or they haven't captured a card, return 0 for 'No Permissions'
             }
             
 		}
