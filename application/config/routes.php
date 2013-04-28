@@ -46,10 +46,15 @@ $route[':num/status'] = "api/status";
 $route[':num/sync'] = "api/sync";
 $route[':num/sync/:any'] = "api/sync";
 $route[':num/card/:any'] = "api/card";
-$route[':num/permissions'] = "api/permissions";
+
 $route[':num/case/:any'] = "api/case";
 $route[':num/tooluse'] = "api/toolusetime";
 $route[':num/tooluse/time'] = "api/toolusetime";
+
+$route[':num/grant-to-card/:any/by-card/:any'] = "api/grant_to_card_by_card";
+
+// Not in the defined API
+// $route[':num/permissions'] = "api/permissions";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -39,3 +39,15 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
+
+
+/* Constants for this project */
+define('RESPONSE_FAILURE',		    0);
+define('RESPONSE_SUCCESS',		    1);
+
+define('NODE_ACCESS_DENIED',		0);
+define('NODE_ACCESS_STANDARD',	    1);
+define('NODE_ACCESS_ADMIN',	        2);
+
+define('TOOL_OUT_OF_SERVICE',       0);
+define('TOOL_IN_SERVICE',           1);

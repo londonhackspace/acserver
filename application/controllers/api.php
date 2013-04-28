@@ -12,14 +12,18 @@ class Api extends REST_Controller {
     }
 
     /*
-     *  Get card permissions
-     *  GET /[nodeID]/card/
-     *  i.e.
-     *  GET /1/card/04FF7922E40080
-     *  returns
-     *  0 - no permissions
-     *  1 - user
-     *  2 - maintainer
+     * GET CARD ACCESS LEVEL
+     * http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Get_card_permissions
+     *
+     * Determine what access (if any) the given card has for the given Node's associated tool
+     *
+     *      GET /[nodeID]/card/[cardID]
+     *      i.e.
+     *      GET /1/card/04FF7922E40080
+     *      returns
+     *      0 - no permissions
+     *      1 - user
+     *      2 - maintainer
      */
 
     public function card_get() {
@@ -30,7 +34,7 @@ class Api extends REST_Controller {
         
         // If we've correctly been presented with a node and a card, then check to see what
         // permission is associated with it
-        if ($acnode_id && $card_unique_identifier) {
+        if (isset($acnode_id) && isset($card_unique_identifier)) {
             $result = $this->Card_model->get_permission($acnode_id, $card_unique_identifier);
         } else {
             error_log("Cannot parse query string to determine the Node ($acnode_id) and Card ($card_unique_identifier) values to check");
@@ -38,44 +42,94 @@ class Api extends REST_Controller {
         $this->response($result);
     }
 
-    public function card_post() {
+
+    /*
+     *
+     * ADD CARD (NOTE NEW POST STRUCTURE)
+     * http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Add_card
+     *
+     *
+     * Given a Node ID, Card to be Added, and a Card with admin powers for that node's associated tool,
+     * grant permissions to the user.
+     * 
+     * If the user has the permission already, success is returned
+     * If the 'granting' user does not have admin powers, failure is returned
+     *
+     *
+     *
+     * The original syntax isn't really ideal, in that it passed data in the Post block, and without
+     * form-like encoding.
+     *
+     * Original Structure:
+     *      POST /[nodeID]/card/
+     *      [card to be added],[card added by]
+     *      04FF7922E40080,04FF1234540080               # Note: in the content of the post, which is "weird"
+     *      returns
+     *          0 - card not added
+     *          1 - card added
+     * 
+     * Changed to
+     *        POST /[nodeID]/grant-to-card/[card_being_granted_to]/by/[card_with_admin_permissions]
+     */
+    public function grant_to_card_by_card_post() {
+        
+        $acnode_id = (int) $this->uri->segment(1);
+        $card_to_add_unique_id   = $this->uri->segment(3);
+        $added_by_unique_card_id = $this->uri->segment(5);
 
         $this->load->model('Card_model');
-
-        foreach ($this->post() as $card_to_add => $card_added_by) {
-            if (($card_to_add != "format") && ($card_to_add != "node")) {
-                if (get_permission($this->post("node"), $card_added_by) == 2) {
-                    //TODO add user to the model and check in maintainer is adding a card that is not a maintainer on this node already
-                    $this->response(1);
-                } else {
-                    $this->response(0);
-                }
-            }
+    
+        // If the card_to_add_unique_id already has permission, just return OK
+        error_log("Checking if $card_to_add_unique_id already has permission?");
+        if  (
+                ($this->Card_model->get_permission($acnode_id, $card_to_add_unique_id) == NODE_ACCESS_STANDARD)
+                || ($this->Card_model->get_permission($acnode_id, $card_to_add_unique_id) == NODE_ACCESS_ADMIN)
+            ) {
+                error_log("Card already has permission - leaving as-is $card_to_add_unique_id");
+                $this->response(RESPONSE_SUCCESS);
         }
 
 
+        // Check that the supplied card_added_by has admin permission
+        error_log("Checking if $added_by_unique_card_id already has permission");
+        if ($this->Card_model->get_permission($acnode_id, $added_by_unique_card_id) == NODE_ACCESS_ADMIN) {
+            error_log("Does not already have permission - adding it");
+            $add_card_response_status = $this->Card_model->add_card($acnode_id, $card_to_add_unique_id, $added_by_unique_card_id);
+            if ($add_card_response_status) {
+                error_log("Permission added successfully");
+                $this->response(RESPONSE_SUCCESS);
+            } else {
+                error_log("Problem adding card");
+                $this->response(RESPONSE_FAILURE);
+            }
+    		
+        } else {
+            error_log("Granting card does not actually have permission - $added_by_unique_card_id tried to grant access to $card_to_add_unique_id");
+            $this->output->set_status_header('401', "'Added By' card $added_by_unique_card_id does not have admin permission");
+            $this->response(RESPONSE_FAILURE);
+        }
 
-        // $data = $this->Card_model->get_permission($this->get('node'), $this->get('card'));
-        // echo $data;
-        //$this->response($data);
     }
 
-    public function permissions_get() {
-
-        $this->load->model('Node_model');
-        $data = $this->Node_model->get_permission($this->get('node'), $this->get('card'));
-        echo $data;
-        //$this->response($data);
-    }
+    // Not in the defined API
+    // public function permissions_get() {
+    // 
+    //     $this->load->model('Node_model');
+    //     $data = $this->Node_model->get_permission($this->get('node'), $this->get('card'));
+    //     echo $data;
+    //     //$this->response($data);
+    // }
 
     /*
      * Check tool status
-      GET /[nodeID]/status/
-      Check if the ACNode has been remotely taken out of service, or put back in service
-      returns
-      0 - out of service
-      1 - in service
-
+     * http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Check_tool_status
+     *
+     *      GET /[nodeID]/status/
+     *      Check if the ACNode has been remotely taken out of service, or put back in service
+     *      returns
+     *      0 - out of service
+     *      1 - in service
+     *
      */
 
     public function status_get() {
@@ -87,7 +141,9 @@ class Api extends REST_Controller {
     }
 
     /*
-     *    Report tool status
+     * Report tool status
+     * http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Report_tool_status
+     *
      *    PUT /[nodeID]/status/
      *    i.e.
      *    PUT /1/status/
@@ -112,17 +168,60 @@ class Api extends REST_Controller {
         
     }
 
+    /*
+     * Tool Usage (live)
+     * http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28live.29
+     * PUT /[nodeID]/tooluse/
+     *    PUT /1/tooluse/
+     *    1,04FF7922E40080
+     *    0 - tool use stopped
+     *    1 - tool in use
+     */
+    public function tooluselive_put() {
+        
+    }
+     
+    /* 
+     * Tool usage (usage time)
+     * http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28usage_time.29
+     *
+     *      POST /[nodeID]/tooluse/time/
+     *      i.e.
+     *      POST /1/tooluse/time/
+     *      34000,04FF7922E40080
+     *      returns
+     *      0 - not saved
+     *      1 - saved
+     */
     public function toolusetime_put() {
         
     }
 
-    public function case_get() {
-        
-    }
 
+    /*
+     * Case alert (Alert if the ACNode case is opened)
+     * 
+     *      PUT /[nodeID]/case/
+     *      i.e.
+     *      PUT /1/case/
+     *      1
+     *
+     *   0 - case closed
+     *   1 - case opened
+     *   returns
+     *   0 - not saved
+     *   1 - saved
+     */
     public function case_put() {
         
     }
+
+    /*
+     * Check DB sync
+     *
+     * http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Check_DB_sync
+     *
+     */
 
     public function sync_get() {
         $this->response(1);

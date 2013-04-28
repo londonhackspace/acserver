@@ -59,16 +59,22 @@ insert into users (user_id, nick) values (100, 'Oskar');
 insert into users (user_id, nick) values (200, 'Foo');     -- id fields must match the website db ids - I've chosen these randomly
 insert into users (user_id, nick) values (201, 'Bar');
 
+insert into cards (card_id, user_id, card_unique_identifier, last_used) values (101, 100, '00000001', now());       -- This card belongs to Oskar
 insert into cards (card_id, user_id, card_unique_identifier, last_used) values (300, 200, 'AAAAAAAA', now());       -- This card belongs to Foo
 insert into cards (card_id, user_id, card_unique_identifier, last_used) values (301, 200, 'BBBBBBBB', now());       -- This card also belongs to Foo
 insert into cards (card_id, user_id, card_unique_identifier, last_used) values (302, 201, 'FFFFFFFF', now());       -- Belongs to Bar
 
+insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (10, 100, 100, 2, now());         -- Oskar has admin access to the Laser
+insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (20, 100, 100, 2, now());         -- Oskar has admin access to the Rage, but it's out of service
+insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (30, 100, 100, 1, now());         -- Oskar does not have admin access to the Three in One
+                                                                                                                            -- Oskar does not have admin access to the Four in One
+
 insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (10, 200, 100, 1, now());         -- Foo has access to the Laser
 insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (20, 200, 100, 1, now());         -- Foo has access to the Rage, but it's out of service
-insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (30, 200, 100, 1, now());         -- Foo has access to the Three in One
+insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (30, 200, 100, 2, now());         -- Foo has admin access to the Three in One
 insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (40, 200, 100, 1, now());         -- Foo has access to the Four in One
 
 insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (10, 201, 100, 1, now());         -- Bar has access to the Laser
 insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (20, 201, 100, 1, now());         -- Bar has access to the Rage, but it's out of service
-insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (30, 201, 100, 0, now());         -- Bar has NO access to the Three in One
--- insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (40, 201, 100, 1, now());         -- Bar has NO access to the Four in One (by ommission)
+                                                                                                                            -- Bar has NO access to the Three in One
+                                                                                                                            -- Bar has NO access to the Four in One
