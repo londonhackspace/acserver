@@ -250,10 +250,12 @@ class Api extends REST_Controller {
     public function update_from_carddb_get() {
         $carddb_str = file_get_contents("/var/run/carddb.json");
         $users = json_decode($carddb_str, true);
-
+        
         foreach ($users as $user) {
-            $user_result = $this->User_model->add_or_update_user($user['user_id'], $user['nick']);
-            
+            $user_id = $user['id'];    # The carddb uses 'id' while we use 'user_id'
+
+            $user_result = $this->User_model->add_or_update_user($user_id, $user['nick']);
+
             # If the user previously had a card, but now that card no longer exists, we need
             # to revoke access.
             #
@@ -262,15 +264,13 @@ class Api extends REST_Controller {
             #
             # To do this in a sane way, we delete all cards from the cards table for the user,
             # then re-add any cards that should be there.
-            $this->Card_model->delete_all_cards_for_user($user['user_id']);
+            $this->Card_model->delete_all_cards_for_user($user_id);
 
-            if (isset($user['cards']) && (!empty($cards_exists))) {
-                foreach ($user['cards'] as $card) {
-                    $card_result = $this->Card_model->add_card_to_user($user['user_id'], $card);
-                }
+            foreach ($user['cards'] as $card_unique_identifier) {
+                $card_result = $this->Card_model->add_card_to_user($user_id, $card_unique_identifier);
             }
         }
-        $this->response();
+        $this->response('OK');
     }
 
     public function page_missing_get() {

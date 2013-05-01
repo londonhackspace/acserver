@@ -98,11 +98,9 @@
 		 * Given a user ID, remove all the cards for that user, if any
 		 */
 		public function delete_all_cards_for_user($user_id) {
-		    $this->db->delete('cards', array('user_id', $user_id));
+		    $this->db->where('user_id', $user_id)->delete('cards');
 		}
-		
-		
-		
+
 		/* PRIVATE FUNCTIONS */
 		private function get_user_id_for_card_unique_identifier($card_unique_identifier) {
 		    $this->db->select('user_id');
@@ -117,8 +115,7 @@
                 return NULL;
             }
 		}
-		
-		
+
 		private function get_tool_id_for_acnode_id($acnode_id) {
 		    $this->db->select('acnodes.tool_id');
 		    $this->db->from('acnodes');
