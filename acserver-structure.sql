@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 CREATE TABLE IF NOT EXISTS `cards` (
-  `card_id` int(11) NOT NULL,
+  `card_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
 
   `card_unique_identifier` varchar(15) NOT NULL,
