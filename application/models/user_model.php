@@ -29,7 +29,7 @@
                 $this->db->where('user_id', $user_id);
                 $this->db->update('users',array('nick' => $user_nick));
                 $row = $query->row_array();
-                return $row["id"];
+                return $row["user_id"];
             }
 		}
 	}
