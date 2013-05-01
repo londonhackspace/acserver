@@ -17,24 +17,16 @@
 				return 0;
 		}
 		
-		public function add_card_old($user_id,$newcard, $mastercard = null){
-			//Check if the card exists, and if it's already a maintainer
-			$query = $this->db->where(array('card' =>$newcard))->get('cards');
-                        if($query->num_rows() == 0){
-                            $datestring = "Year: %Y Month: %m Day: %d - %h:%i %a";
-                            $this->db->insert('cards',array('card' => $newcard,
-                                'user_id' => $user_id, 
-                                'added_by_card' => $mastercard, 
-                                'added_on' => date('Y-m-d H:i:s')));
-			return $this->db->insert_id();
-                        }else{
-                            return null;
-                            
-                        }
-                        
-
+		public function add_card_to_user($user_id, $card_unique_identifier) {
+		    $insert_status = $this->db->insert('cards',
+                array(
+                    'user_id' => $user_id,
+                    'card_unique_identifier' => $card_unique_identifier,
+                )
+            );
 		}
-		public function add_card($acnode_id, $card_to_add_unique_id, $added_by_unique_card_id) {
+		
+		public function add_permissions_with_card($acnode_id, $card_to_add_unique_id, $added_by_unique_card_id) {
 
             // Gather the required fields
             $user_id = $this->get_user_id_for_card_unique_identifier($card_to_add_unique_id);
@@ -101,6 +93,15 @@
             }
 
 		}
+		
+		/*
+		 * Given a user ID, remove all the cards for that user, if any
+		 */
+		public function delete_all_cards_for_user($user_id) {
+		    $this->db->delete('cards', array('user_id', $user_id));
+		}
+		
+		
 		
 		/* PRIVATE FUNCTIONS */
 		private function get_user_id_for_card_unique_identifier($card_unique_identifier) {

@@ -94,7 +94,7 @@ class Api extends REST_Controller {
         error_log("Checking if $added_by_unique_card_id already has permission");
         if ($this->Card_model->get_permission($acnode_id, $added_by_unique_card_id) == NODE_ACCESS_ADMIN) {
             error_log("Does not already have permission - adding it");
-            $add_card_response_status = $this->Card_model->add_card($acnode_id, $card_to_add_unique_id, $added_by_unique_card_id);
+            $add_card_response_status = $this->Card_model->add_permissions_with_card($acnode_id, $card_to_add_unique_id, $added_by_unique_card_id);
             if ($add_card_response_status) {
                 error_log("Permission added successfully");
                 $this->response(RESPONSE_SUCCESS);
@@ -223,32 +223,54 @@ class Api extends REST_Controller {
      */
 
     public function sync_get() {
-        $this->response(1);
+        
+	    $this->db->select('card_id');
+        $this->db->limit(1);
+	    $this->db->from('cards');
+
+        if ($this->uri->total_segments() == 3) {     # 1/sync/000000
+            # If we're supplied with a 'last card id', we retrieve items > than that
+            $last_card_unique_identifier = $this->uri->segment(3);
+            $this->db->where('card_unique_identifier > ', $card_unique_identifier);
+        }
+
+        $this->db->order_by("card_unique_identifier asc");
+        $query = $this->db->get();
+        if ( $query->num_rows() > 0 ) {
+            $row = $query->row();
+            $this->response($row->card_unique_identifier);            
+        } else {
+            $this->response(1);            
+        }
     }
     
     public function init_get() {
         
     }
-    public function sync_db_get() {
-        $carddb_str = file_get_contents("/var/www/acserver/carddb.json");
+    public function update_from_carddb_get() {
+        $carddb_str = file_get_contents("/var/run/carddb.json");
         $users = json_decode($carddb_str, true);
 
         foreach ($users as $user) {
-            $user_exists = $this->User_model->get_user($user['id']);
-            if (empty($user_exists)) {
-                $user_result = $this->User_model->add_user($user['id'], $user['nick']);
-                
-                if (isset($user['cards'])) {
-                    if (empty($cards_exists))
-                        foreach ($user['cards'] as $card) {
-                            $card_exists = $this->Card_model->get_card($card);
-                            if (empty($card_exists))
-                                $card_result = $this->Card_model->add_card($user['id'], $card);
-                        }
+            $user_result = $this->User_model->add_or_update_user($user['user_id'], $user['nick']);
+            
+            # If the user previously had a card, but now that card no longer exists, we need
+            # to revoke access.
+            #
+            # Similarly, we could have a situation where card A belonged to Alice, but Alice
+            # gave the card to Bob, after removing it from their account.
+            #
+            # To do this in a sane way, we delete all cards from the cards table for the user,
+            # then re-add any cards that should be there.
+            $this->Card_model->delete_all_cards_for_user($user['user_id']);
+
+            if (isset($user['cards']) && (!empty($cards_exists))) {
+                foreach ($user['cards'] as $card) {
+                    $card_result = $this->Card_model->add_card_to_user($user['user_id'], $card);
                 }
             }
         }
-        //$this->response($json_a);
+        $this->response();
     }
 
     public function page_missing_get() {
