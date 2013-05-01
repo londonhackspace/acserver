@@ -41,13 +41,23 @@
 $route['default_controller'] = "api";
 //$route['404_override'] = 'api/page_missing';
 
-$route['sync_db'] = "api/sync_db";
+// Updates the carddb from the latest download at /var/run/carddb.json
+$route['update_from_carddb'] = "api/update_from_carddb";
+
+// Returns tool status
 $route[':num/status'] = "api/status";
+
+
 $route[':num/sync'] = "api/sync";
 $route[':num/sync/:any'] = "api/sync";
+
+// Returns the status for a given node and given card
 $route[':num/card/:any'] = "api/card";
 
+// Case Alerts
 $route[':num/case/:any'] = "api/case";
+
+// Tool usage
 $route[':num/tooluse'] = "api/toolusetime";
 $route[':num/tooluse/time'] = "api/toolusetime";
 
