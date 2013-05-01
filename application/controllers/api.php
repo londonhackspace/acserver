@@ -224,14 +224,14 @@ class Api extends REST_Controller {
 
     public function sync_get() {
         
-	    $this->db->select('card_id');
+	    $this->db->select('card_unique_identifier');
         $this->db->limit(1);
 	    $this->db->from('cards');
 
         if ($this->uri->total_segments() == 3) {     # 1/sync/000000
             # If we're supplied with a 'last card id', we retrieve items > than that
             $last_card_unique_identifier = $this->uri->segment(3);
-            $this->db->where('card_unique_identifier > ', $card_unique_identifier);
+            $this->db->where('card_unique_identifier > ', $last_card_unique_identifier);
         }
 
         $this->db->order_by("card_unique_identifier asc");
@@ -240,7 +240,7 @@ class Api extends REST_Controller {
             $row = $query->row();
             $this->response($row->card_unique_identifier);            
         } else {
-            $this->response(1);            
+            $this->response('END');            
         }
     }
     
