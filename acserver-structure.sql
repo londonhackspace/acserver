@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `cards` (
 
   `card_unique_identifier` varchar(15) NOT NULL,
   
-  `last_used` datetime DEFAULT NULL,
+  `last_used` datetime DEFAULT NULL,            -- not used at the moment, as we delete cards each time
 
   PRIMARY KEY (`card_id`),
   UNIQUE KEY `cards` (`card_id`)
