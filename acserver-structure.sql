@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `tool_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `last_used` datetime DEFAULT NULL,
-  `added_by_user_id` int(11) NOT NULL,
+  `added_by_user_id` int(11) NULL,
   `added_on` datetime NOT NULL,
   `permission` int(1) NOT NULL                  -- 0 => No Permissions ; 1 => User ; 2 => maintainer
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
