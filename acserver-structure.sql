@@ -118,8 +118,11 @@ ALTER TABLE `permissions` ADD CONSTRAINT FK_permissions_added_by_user_id FOREIGN
 
 CREATE TABLE IF NOT EXISTS `toolusage` (
   `tool_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `time` int(11) NOT NULL
+  `user_id` int(11) NULL,
+  `card_unique_identifier` varchar(15) NULL,
+  `logged_at` timestamp not null,
+  `logged_event` varchar(25) NOT NULL,
+  `time` int(11) DEFAULT 0 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ALTER TABLE `toolusage` ADD CONSTRAINT FK_toolusage_tool_id FOREIGN KEY (tool_id) REFERENCES tools(tool_id);
 ALTER TABLE `toolusage` ADD CONSTRAINT FK_toolusage_user_id FOREIGN KEY (user_id) REFERENCES users(user_id);
