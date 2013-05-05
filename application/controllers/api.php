@@ -250,7 +250,7 @@ class Api extends REST_Controller {
         // underlying db ID, so that the results are always deterministic (even if they
         // are wrong, due to some problem like a non-unique card ID)
         $this->db->order_by("card_unique_identifier asc, card_id asc");
-
+        
         $query = $this->db->get();
         if ( $query->num_rows() > 0 ) {
             $row = $query->row();
@@ -407,24 +407,24 @@ class Api extends REST_Controller {
     
 
     /*
-        TITLE: 
+        TITLE: Case alert
 
         DESCRIPTION:
-            ....
+            Lots an alert whenever the acnode or it's associated tool's case is opened / closed
             
         URL STRUCTURE:
-            ....
+            /[nodeID]/case/change/[newStatus]
 
         DESCRIPTION URL:
-            ...
+            http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Case_alert
             
         EXAMPLES:
             (Using test data set)
             
-            Marks the case as closed
+            Marks the case as closed (0)
                 curl --data '' http://acnodeserver/1/case/change/0
 
-            Marks the case as opened
+            Marks the case as opened (1)
                 curl --data '' http://acnodeserver/1/case/change/1
             
         
@@ -441,6 +441,7 @@ class Api extends REST_Controller {
 
 
     
+    // Unused?
     public function init_get() {
 
     }
