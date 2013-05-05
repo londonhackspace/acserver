@@ -38,7 +38,7 @@ class Api extends REST_Controller {
             (Using test data set)
             
             Returns 1 for 'OK':
-                curl http://acnodeserver/update_from_carddb
+                curl http://babbage:1234/update_from_carddb
 
     */
     public function update_from_carddb_get() {
@@ -84,16 +84,16 @@ class Api extends REST_Controller {
             (Using test data set)
 
             Returns 2, as this card is set up as an administrative card:
-                curl http://acnodeserver/1/card/00000001
+                curl http://babbage:1234/1/card/00000001
             
             Returns 1, as this is a NORMAL user card:
-                curl http://acnodeserver/1/card/AAAAAAAA
+                curl http://babbage:1234/1/card/AAAAAAAA
             
             Returns 0, as this is an un-authorised card (assuming you haven't authorised it in testing)
-                curl http://acnodeserver/1/card/BABABABA
+                curl http://babbage:1234/1/card/BABABABA
 
             Returns 0, as this is an unknown card
-                curl http://acnodeserver/1/card/JKLMNOP
+                curl http://babbage:1234/1/card/JKLMNOP
     */
     public function card_get() {
         $acnode_id = (int) $this->uri->segment(1);
@@ -139,11 +139,11 @@ class Api extends REST_Controller {
                 
             Curl Examples:
                 This returns 0 as the user doesn't have permission by default in the test data:
-                     curl http://acnodeserver/1/card/BABABABA
+                     curl http://babbage:1234/1/card/BABABABA
                 Add the card, using the 00000001 card's admin permissions
-                     curl --data '' http://acnodeserver/1/grant-to-card/BABABABA/by-card/00000001
+                     curl --data '' http://babbage:1234/1/grant-to-card/BABABABA/by-card/00000001
                 And now this returns 1
-                     curl http://acnodeserver/1/card/BABABABA
+                     curl http://babbage:1234/1/card/BABABABA
                      
                 Note you should possibly reset the db after testing
         
@@ -208,15 +208,15 @@ class Api extends REST_Controller {
         EXAMPLES:
             (Using test data set)
             Returns 00000001, the first card:
-                curl http://acnodeserver/1/sync
+                curl http://babbage:1234/1/sync
 
             Returns AAAAAAAA, the second card, by passing in the 00000001 referred to above
-                curl http://acnodeserver/1/sync/00000001
+                curl http://babbage:1234/1/sync/00000001
                 
              Returns BBBBBBBB, the third card, by passing in the AAAAAAAA referred to above. If it returns
                 BABABABA it means that you haven't reset the card database after testing granting permission above
                 
-                curl http://acnodeserver/1/sync/AAAAAAAA
+                curl http://babbage:1234/1/sync/AAAAAAAA
 
             Continue retrieving cards until you reach 'END'
 
@@ -278,16 +278,16 @@ class Api extends REST_Controller {
             (Using test data set)
             
             Sets the status to 1, using admin card 00000001. Returns 1 to indicate the save was ok
-                curl --data '' http://acnodeserver/1/status/0/by/00000001
+                curl --data '' http://babbage:1234/1/status/0/by/00000001
 
             Sets the status to 0, using admin card 00000001. Returns 1 to indicate the save was ok
-                curl --data '' http://acnodeserver/1/status/1/by/00000001
+                curl --data '' http://babbage:1234/1/status/1/by/00000001
 
             Tries to set status to 1, using non-admin card AAAAAAAA. Returns 0 to indicate the save failed
-                curl --data '' http://acnodeserver/1/status/1/by/AAAAAAAA
+                curl --data '' http://babbage:1234/1/status/1/by/AAAAAAAA
 
             Tries to set status to 1, using unknown card DOESNOTEXIST. Returns 0 to indicate the save failed
-                curl --data '' http://acnodeserver/1/status/1/by/DOESNOTEXIST
+                curl --data '' http://babbage:1234/1/status/1/by/DOESNOTEXIST
         
     */
     public function change_status_post() {
@@ -321,10 +321,10 @@ class Api extends REST_Controller {
             (Using test data set)
             
             Returns 1, indicating the tool status is OK for the Laser
-                curl http://acnodeserver/1/status
+                curl http://babbage:1234/1/status
 
             Returns 0, indicating the tool status is out out of service for the Rage
-                curl http://acnodeserver/2/status
+                curl http://babbage:1234/2/status
         
     */
     public function status_get() {
@@ -351,10 +351,10 @@ class Api extends REST_Controller {
             (Using test data set)
             
             Inserts into the log that user 100 (with card 00000001) that tool access started. Returns 1 for save ok.
-                curl --data '' http://acnodeserver/1/tooluse/1/00000001
+                curl --data '' http://babbage:1234/1/tooluse/1/00000001
                 
             Inserts into the log that user 100 (with card 00000001) that tool access finished. Returns 1 for save ok.
-                curl --data '' http://acnodeserver/1/tooluse/0/00000001
+                curl --data '' http://babbage:1234/1/tooluse/0/00000001
         
         
     */
@@ -389,7 +389,7 @@ class Api extends REST_Controller {
             (Using test data set)
             
             Inserts into the log that user 100 (with card 00000001) used the tool for 30000 ms. Returns 1 for save ok.
-                curl --data '' http://acnodeserver/1/tooluse/time/for/00000001/30000
+                curl --data '' http://babbage:1234/1/tooluse/time/for/00000001/30000
         
     */
     public function toolusetime_post() {
@@ -420,10 +420,10 @@ class Api extends REST_Controller {
             (Using test data set)
             
             Marks the case as closed (0)
-                curl --data '' http://acnodeserver/1/case/change/0
+                curl --data '' http://babbage:1234/1/case/change/0
 
             Marks the case as opened (1)
-                curl --data '' http://acnodeserver/1/case/change/1
+                curl --data '' http://babbage:1234/1/case/change/1
             
         
     */
