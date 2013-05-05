@@ -24,17 +24,17 @@ class Api extends CI_Controller {
             written to the above location
         
         URL STRUCTURE:
-            GET /update_from_carddb
+            Can't be called from the web interface as it can lead to timeouts
             
         DESCRIPTION URL:
             Not described in original Solexious Proposal. Added so that we can process
             updates from the command line
             
         EXAMPLES:
-            (Using test data set)
-            
-            Returns 1 for 'OK':
-                curl http://babbage:1234/update_from_carddb
+            ...@babbage:~$ cd /var/www/acserver/
+            ...@babbage:~$ sudo curl -o /var/run/carddb.json https://london.hackspace.org.uk/carddb.php
+            ...@babbage:~$ php index.php update_from_carddb
+
 
     */
     public function update_from_carddb() {
