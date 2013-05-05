@@ -90,7 +90,7 @@ $route[':num/tooluse/time/for/:any/:num'] = "api/toolusetime";
 // Case Alter
 // Notes when the tool's case is opened / closed
 // http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Case_alert
-$route[':num/case/:any'] = "api/case";
+$route[':num/case/:any'] = "api/case_change";
 
 
 /* End of file routes.php */

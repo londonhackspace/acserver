@@ -1,10 +1,6 @@
 <?php
 
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
-require_once("application/libraries/REST_Controller.php");
-
-class Api extends REST_Controller {
+class Api extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -41,7 +37,7 @@ class Api extends REST_Controller {
                 curl http://babbage:1234/update_from_carddb
 
     */
-    public function update_from_carddb_get() {
+    public function update_from_carddb() {
         $carddb_str = file_get_contents("/var/run/carddb.json");
         $users = json_decode($carddb_str, true);
         
@@ -95,7 +91,7 @@ class Api extends REST_Controller {
             Returns 0, as this is an unknown card
                 curl http://babbage:1234/1/card/JKLMNOP
     */
-    public function card_get() {
+    public function card() {
         $acnode_id = (int) $this->uri->segment(1);
         $card_unique_identifier = $this->uri->segment(3);
         $this->uri->segment(3) . "\n";
@@ -148,7 +144,7 @@ class Api extends REST_Controller {
                 Note you should possibly reset the db after testing
         
     */
-    public function grant_to_card_by_card_post() {
+    public function grant_to_card_by_card() {
         
         $acnode_id = (int) $this->uri->segment(1);
         $card_to_add_unique_id   = $this->uri->segment(3);
@@ -221,7 +217,7 @@ class Api extends REST_Controller {
             Continue retrieving cards until you reach 'END'
 
     */
-    public function sync_get() {
+    public function sync() {
         $acnode_id = (int) $this->uri->segment(1);
 
 	    $this->db->select('card_unique_identifier');
@@ -290,7 +286,7 @@ class Api extends REST_Controller {
                 curl --data '' http://babbage:1234/1/status/1/by/DOESNOTEXIST
         
     */
-    public function change_status_post() {
+    public function change_status() {
         $acnode_id = (int) $this->uri->segment(1);
         $status    = (int) $this->uri->segment(3);
         $card_unique_identifier = (int) $this->uri->segment(5);
@@ -327,7 +323,7 @@ class Api extends REST_Controller {
                 curl http://babbage:1234/2/status
         
     */
-    public function status_get() {
+    public function status() {
         $node = (int) $this->uri->segment(1);
 
         $data = $this->Acnode_model->get_status($node);
@@ -358,7 +354,7 @@ class Api extends REST_Controller {
         
         
     */
-    public function tooluselive_post() {
+    public function tooluselive() {
         $acnode_id = (int) $this->uri->segment(1);
         $status    = (int) $this->uri->segment(3);
         $card_unique_identifier = $this->uri->segment(4);
@@ -392,7 +388,7 @@ class Api extends REST_Controller {
                 curl --data '' http://babbage:1234/1/tooluse/time/for/00000001/30000
         
     */
-    public function toolusetime_post() {
+    public function toolusetime() {
         $acnode_id = (int) $this->uri->segment(1);
         $card_unique_identifier = $this->uri->segment(5);
         $time_used  = $this->uri->segment(6);
@@ -427,9 +423,9 @@ class Api extends REST_Controller {
             
         
     */
-    public function case_post() {
+    public function case_change() {
         $acnode_id = (int) $this->uri->segment(1);
-        $status    = (int) $this->uri->segment(1);
+        $status    = (int) $this->uri->segment(4);
 
         $tool_id = $this->Card_model->get_tool_id_for_acnode_id($acnode_id);
         
@@ -439,13 +435,8 @@ class Api extends REST_Controller {
 
 
     
-    // Unused?
-    public function init_get() {
-
-    }
-
-    public function page_missing_get() {
-        $this->response(RESPONSE_FAILURE);
+    protected function response($data) {
+        echo $data;
     }
 
 }
