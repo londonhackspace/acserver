@@ -58,11 +58,13 @@ insert into acnodes (
 insert into users (user_id, nick) values (100, 'Oskar');
 insert into users (user_id, nick) values (200, 'Foo');     -- id fields must match the website db ids - I've chosen these randomly
 insert into users (user_id, nick) values (201, 'Bar');
+insert into users (user_id, nick) values (202, 'Nothing Yet Granted');
 
 insert into cards (card_id, user_id, card_unique_identifier, last_used) values (101, 100, '00000001', now());       -- This card belongs to Oskar
 insert into cards (card_id, user_id, card_unique_identifier, last_used) values (300, 200, 'AAAAAAAA', now());       -- This card belongs to Foo
 insert into cards (card_id, user_id, card_unique_identifier, last_used) values (301, 200, 'BBBBBBBB', now());       -- This card also belongs to Foo
 insert into cards (card_id, user_id, card_unique_identifier, last_used) values (302, 201, 'FFFFFFFF', now());       -- Belongs to Bar
+insert into cards (card_id, user_id, card_unique_identifier, last_used) values (303, 202, 'BABABABA', now());       -- Belongs to Nothing Yet Granted
 
 insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (10, 100, 100, 2, now());         -- Oskar has admin access to the Laser
 insert into permissions (tool_id, user_id, added_by_user_id, permission, added_on) values (20, 100, 100, 2, now());         -- Oskar has admin access to the Rage, but it's out of service

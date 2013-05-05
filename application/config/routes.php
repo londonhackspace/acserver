@@ -41,30 +41,57 @@
 $route['default_controller'] = "api";
 //$route['404_override'] = 'api/page_missing';
 
-// Updates the carddb from the latest download at /var/run/carddb.json
+
+// Sync with membership file
 $route['update_from_carddb'] = "api/update_from_carddb";
 
-// Returns tool status
-$route[':num/status'] = "api/status";
+
+// Get Card Permission
+// Returns the status for a given node and given card.
+// http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Get_card_permissions
+$route[':num/card/:any'] = "api/card";
 
 
+// Add Card
+// A supervisor card grants access to a device.
+// http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Add_card
+$route[':num/grant-to-card/:any/by-card/:any'] = "api/grant_to_card_by_card";
+
+
+// Check DB Sync
+// Returns the first card in the db for a given acnode entry, and when re-called with that node
+// as an argument, returns the next card in the DB. Returns END on completion
+// http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Check_DB_sync
 $route[':num/sync'] = "api/sync";
 $route[':num/sync/:any'] = "api/sync";
 
-// Returns the status for a given node and given card
-$route[':num/card/:any'] = "api/card";
 
-// Case Alerts
+// Returns or sets tool status.
+// 1 means tool is ok for use, 0 means it is not
+// http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Report_tool_status
+// http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Check_tool_status
+$route[':num/status'] = "api/status";
+$route[':num/status/:num/by/:any'] = "api/change_status";
+
+
+// Tool usage - Live
+// Notes when a starts being used by a user, or when it stops being used by a user
+// http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28live.29
+$route[':num/tooluse/:num/:any'] = "api/tooluselive";
+
+
+// Tool usage (usage time)
+// Notes how much time a user spent on a tool
+// http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28usage_time.29
+$route[':num/tooluse/time/for/:any/:num'] = "api/toolusetime";
+
+
+
+// Case Alter
+// Notes when the tool's case is opened / closed
+// http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Case_alert
 $route[':num/case/:any'] = "api/case";
 
-// Tool usage
-$route[':num/tooluse'] = "api/toolusetime";
-$route[':num/tooluse/time'] = "api/toolusetime";
-
-$route[':num/grant-to-card/:any/by-card/:any'] = "api/grant_to_card_by_card";
-
-// Not in the defined API
-// $route[':num/permissions'] = "api/permissions";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -7,14 +7,45 @@
 			$this->load->database();
 		}
 		
-		public function get_status($tool_id){
-			$query = $this->db->get_where('tools',array('tool_id' => $tool_id));
-			$results = $query->row_array();
-			if(!empty($results)){
-                                print_r($results);
-				return $results[0]['status'];
-                        }else
-				return 0;
+		public function set_tool_status_for_acnode_id($acnode_id, $status) {
+            $this->db->where('tool_id', $this->get_tool_id_for_acnode_id($acnode_id));
+            $this->db->update('tools', array('status' => $status));
+			return 1;
+		}
+		
+		public function log_usage($acnode_id, $user_id, $card_unique_identifier, $logged_event, $time) {
+		    
+		    $this->db->insert('toolusage',
+		        array(
+		            'tool_id' => $this->get_tool_id_for_acnode_id($acnode_id),
+		            'user_id' => $user_id,
+		            'card_unique_identifier' => $card_unique_identifier,
+		            'logged_event' => $logged_event,
+		            'time' => $time
+		        )
+		    );
+		    
+		    return 1;
+            
+		}
+		
+        /* Need to centralise this function between this code and card_model.php */
+		public function get_tool_id_for_acnode_id($acnode_id) {
+		    $query = $this->db->get_where('acnodes',array('acnode_id' => $acnode_id));
+			$row = $query->row_array();
+			
+			return (int) $row['tool_id'];
+		}
+		
+		/* Log when the case has been opened or closed */
+		public function log_case_status_change($acnode_id, $status) {
+		    $narrative = 'Case changed status to ';
+		    if ($status == 0) {
+		        $narrative .= "Closed";
+		    } else {
+		        $narrative .= "Open";
+		    }
+		    $this->log_usage($acnode_id, NULL, NULL, $narrative, 0);
 		}
 	}
 ?>

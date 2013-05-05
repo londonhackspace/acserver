@@ -4,23 +4,21 @@ Access Control Server
 A RESTful server that works with the Access Control Nodes (https://github.com/solexious/ACNode)
 Protocol loosely based on http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal
 
-STATUS: Working, but very partial functionality and documentation
+Status: Done, but not yet fully tested
 
-- [X] One way sync from membership json file
-- [ ] Two way sync with membership json file
-- [ ] GET /[nodeID]/card/
-- [ ] POST /[nodeID]/card/
-- [ ] GET /[nodeID]/sync/
-- [ ] GET /[nodeID/sync/[last received card]/
-- [ ] PUT /[nodeID]/status/
-- [ ] GET /[nodeID]/status/
-- [ ] PUT /[nodeID]/tooluse/
-- [ ] POST /[nodeID]/tooluse/time/
-- [ ] PUT /[nodeID]/case/
-
+- [X] Sync with membership json file
+- [X] [Get Card Permission](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Get_card_permissions)
+- [X] [Add Card](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Add_card)
+- [X] [Check DB Sync](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Check_DB_sync)
+- [X] [Report Tool Status](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Report_tool_status)
+- [X] [Check Tool Status](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Check_tool_status)
+- [X] [Tool Usage (live)](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28live.29)
+- [X] [Tool Usage (usage time)](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28usage_time.29)
+- [X] [Case Alter](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Case_alert)
 
 
 Usage:
-curl http://[server]:[port]/[node_id]/card/[card_id]
+======
+* See routes.php for usage examples
 
 For testing it's installed on babbage port 1234

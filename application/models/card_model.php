@@ -8,15 +8,6 @@
 			$this->load->helper('date');
 		}
 		
-		public function get_card($card){
-			$query = $this->db->get_where('cards',array('card' => $card));
-			$results = $query->row_array();
-			if(!empty($results))
-				return $results;
-			else
-				return 0;
-		}
-		
 		public function add_card_to_user($user_id, $card_unique_identifier) {
 		    $insert_status = $this->db->insert('cards',
                 array(
@@ -31,6 +22,7 @@
             // Gather the required fields
             $user_id = $this->get_user_id_for_card_unique_identifier($card_to_add_unique_id);
             if (!isset($user_id)) {
+                error_log("Cannot get user id for card $card_to_add_unique_id");
                 return FALSE;
             }
             $added_by_user_id = $this->get_user_id_for_card_unique_identifier($added_by_unique_card_id);
@@ -46,6 +38,7 @@
             }
             
             // Insert the data into the permissions table
+            error_log("Inserting permissions for new card");
             $insert_status = $this->db->insert('permissions',
                 array(
                     'tool_id' => $tool_id,
@@ -67,7 +60,7 @@
 		/*
 		 * Returns the permission value (0, 1, 2) for a given card unique ID for a given ACNode ID
 		 */
-		public function get_permission($acnode_id, $card_unique_identifier){
+		public function get_permission($acnode_id, $card_unique_identifier, $require_tool_to_be_enabled){
 
 		    $this->db->select('permissions.permission');
 		    $this->db->from('permissions, cards, tools, acnodes');
@@ -76,7 +69,11 @@
     	    $this->db->where('cards.card_unique_identifier', $card_unique_identifier);
 
             // Ensure the tool status is 'in service' (status = 1)
-    	    $this->db->where('tools.status', 1);
+            // This can be overridden by the caller by setting tool_status_must_be_enabled in the parameters,
+            // which we do when changing the status from disabled back to enabled
+            if ($require_tool_to_be_enabled == 1) {
+        	    $this->db->where('tools.status', 1);
+    	    }
 
             // Relationships
     	    $this->db->where('tools.tool_id', 'acnodes.tool_id', FALSE);
@@ -101,8 +98,7 @@
 		    $this->db->where('user_id', $user_id)->delete('cards');
 		}
 
-		/* PRIVATE FUNCTIONS */
-		private function get_user_id_for_card_unique_identifier($card_unique_identifier) {
+		public function get_user_id_for_card_unique_identifier($card_unique_identifier) {
 		    $this->db->select('user_id');
 		    $this->db->from('cards');
     	    $this->db->where('cards.card_unique_identifier', $card_unique_identifier);
@@ -116,7 +112,8 @@
             }
 		}
 
-		private function get_tool_id_for_acnode_id($acnode_id) {
+        /* Need to centralise this function between this code and tool_model.php */
+		public function get_tool_id_for_acnode_id($acnode_id) {
 		    $this->db->select('acnodes.tool_id');
 		    $this->db->from('acnodes');
     	    $this->db->where('acnode_id', $acnode_id);
