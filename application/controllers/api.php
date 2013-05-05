@@ -261,36 +261,6 @@ class Api extends REST_Controller {
     }
 
 
-    /*
-        TITLE: Check Tool Status
-
-        DESCRIPTION:
-            Returns a binary status of the tool - indicating whether it's available for use or not
-            
-        URL STRUCTURE:
-            GET /[nodeID]/status/
-
-        DESCRIPTION URL:
-            http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Check_tool_status
-            
-        EXAMPLES:
-            (Using test data set)
-            
-            Returns 1, indicating the tool status is OK for the Laser
-                curl http://acnodeserver/1/status
-
-            Returns 0, indicating the tool status is out out of service for the Rage
-                curl http://acnodeserver/2/status
-        
-    */
-    public function status_get() {
-        $node = (int) $this->uri->segment(1);
-
-        $data = $this->Acnode_model->get_status($node);
-        $this->response($data);
-    }
-
-
 
     /*
         TITLE: Report Tool Status
@@ -335,6 +305,34 @@ class Api extends REST_Controller {
     }
 
 
+    /*
+        TITLE: Check Tool Status
+
+        DESCRIPTION:
+            Returns a binary status of the tool - indicating whether it's available for use or not
+            
+        URL STRUCTURE:
+            GET /[nodeID]/status/
+
+        DESCRIPTION URL:
+            http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Check_tool_status
+            
+        EXAMPLES:
+            (Using test data set)
+            
+            Returns 1, indicating the tool status is OK for the Laser
+                curl http://acnodeserver/1/status
+
+            Returns 0, indicating the tool status is out out of service for the Rage
+                curl http://acnodeserver/2/status
+        
+    */
+    public function status_get() {
+        $node = (int) $this->uri->segment(1);
+
+        $data = $this->Acnode_model->get_status($node);
+        $this->response($data);
+    }
 
 
     /*
