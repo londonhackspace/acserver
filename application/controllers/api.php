@@ -56,8 +56,10 @@ class Api extends CI_Controller {
             # then re-add any cards that should be there.
             $this->Card_model->delete_all_cards_for_user($user_id);
 
-            foreach ($user['cards'] as $card_unique_identifier) {
-                $card_result = $this->Card_model->add_card_to_user($user_id, $card_unique_identifier);
+            if ($user['subscribed'] == 1) {
+                foreach ($user['cards'] as $card_unique_identifier) {
+                    $card_result = $this->Card_model->add_card_to_user($user_id, $card_unique_identifier);
+                }
             }
         }
         $this->response(RESPONSE_SUCCESS);
