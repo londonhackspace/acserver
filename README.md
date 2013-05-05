@@ -19,6 +19,6 @@ Status: Done, but not yet fully tested
 
 Usage:
 ======
-* See routes.php for usage examples
+* See the comments in application/controllers/api.php for usage examples.
 
 For testing it's installed on babbage port 1234
