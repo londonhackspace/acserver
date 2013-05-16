@@ -60,20 +60,13 @@
 		/*
 		 * Returns the permission value (0, 1, 2) for a given card unique ID for a given ACNode ID
 		 */
-		public function get_permission($acnode_id, $card_unique_identifier, $require_tool_to_be_enabled){
+		public function get_permission($acnode_id, $card_unique_identifier){
 
 		    $this->db->select('permissions.permission');
 		    $this->db->from('permissions, cards, tools, acnodes');
 
     	    $this->db->where('acnodes.acnode_id', $acnode_id);
     	    $this->db->where('cards.card_unique_identifier', $card_unique_identifier);
-
-            // Ensure the tool status is 'in service' (status = 1)
-            // This can be overridden by the caller by setting tool_status_must_be_enabled in the parameters,
-            // which we do when changing the status from disabled back to enabled
-            if ($require_tool_to_be_enabled == 1) {
-        	    $this->db->where('tools.status', 1);
-    	    }
 
             // Relationships
     	    $this->db->where('tools.tool_id', 'acnodes.tool_id', FALSE);
