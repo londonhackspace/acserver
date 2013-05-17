@@ -173,7 +173,7 @@ class Api extends CI_Controller {
             } else {
                 $this->response(RESPONSE_FAILURE);
             }
-    		
+        
         } else {
             error_log("Supposed grantor card $added_by_unique_card_id does not have admin permissions to acnode $acnode_id");
             $this->output->set_status_header('401', "'Added By' card $added_by_unique_card_id does not have admin permission");
@@ -222,8 +222,8 @@ class Api extends CI_Controller {
     public function sync() {
         $acnode_id = (int) $this->uri->segment(1);
 
-	    $this->db->select('card_unique_identifier');
-	    $this->db->from('cards');
+        $this->db->select('card_unique_identifier');
+        $this->db->from('cards');
         $this->db->join('users', 'users.user_id = cards.user_id');
         $this->db->join('permissions', 'permissions.user_id = users.user_id');
         $this->db->join('tools', 'tools.tool_id = permissions.tool_id');
@@ -232,9 +232,9 @@ class Api extends CI_Controller {
         $this->db->where('acnodes.acnode_id', $acnode_id);
         $this->db->where('permissions.permission > ', 0);
 
-	    /*
-	     * If we're passed a previous card number, find the next card above that
-	    */
+        /*
+        * If we're passed a previous card number, find the next card above that
+        */
 
         if ($this->uri->total_segments() == 3) {     # 1/sync/000000
             # If we're supplied with a 'last card id', we retrieve items > than that
@@ -266,12 +266,12 @@ class Api extends CI_Controller {
         DESCRIPTION:
             Indicates whether a card is in our out of service.
 
-			Any user with a card can take a device out of service (even if they haven't got permission
-			for the device itself!) and we log who took the device out of service. This way if someone
-			notices a problem they can immediately mark the device as problematic, without having to
-			get an admin user involved.
-			
-			Only an administrative user can, however, mark a device back 'in service'.
+            Any user with a card can take a device out of service (even if they haven't got permission
+            for the device itself!) and we log who took the device out of service. This way if someone
+            notices a problem they can immediately mark the device as problematic, without having to
+            get an admin user involved.
+            
+            Only an administrative user can, however, mark a device back 'in service'.
             
         URL STRUCTURE:
             POST /[nodeID]/status/[new_status]/by/[cardID]
@@ -282,87 +282,87 @@ class Api extends CI_Controller {
         EXAMPLES:
             (Using test data set - run these commands in the presented order for testing)
 
-			Shows the status as '1' by default in the test data:
-				curl http://babbage:1234/1/status
+            Shows the status as '1' by default in the test data:
+                curl http://babbage:1234/1/status
             
             Sets the status to 0, using admin card 00000001. Returns 1 to indicate the save was ok
                 curl --data '' http://babbage:1234/1/status/0/by/00000001
 
-			The status is now showing as 0
-				curl http://babbage:1234/1/status
+            The status is now showing as 0
+                curl http://babbage:1234/1/status
 
             Sets the status back to 1, using admin card 00000001. Returns 1 to indicate the save was ok
                 curl --data '' http://babbage:1234/1/status/1/by/00000001
 
-			The status is showing as 1
-				curl http://babbage:1234/1/status
+            The status is showing as 1
+                curl http://babbage:1234/1/status
 
-			Tries to set status to 0, using unknown card DOESNOTEXIST. Returns 0 to indicate the save failed
-			    curl --data '' http://babbage:1234/1/status/0/by/DOESNOTEXIST
+            Tries to set status to 0, using unknown card DOESNOTEXIST. Returns 0 to indicate the save failed
+                curl --data '' http://babbage:1234/1/status/0/by/DOESNOTEXIST
 
-			Now the status is still 1, as the attempt by DOESNOTEXIST has not worked
-				curl http://babbage:1234/1/status
+            Now the status is still 1, as the attempt by DOESNOTEXIST has not worked
+                curl http://babbage:1234/1/status
 
-			Sets the status to 0, using non-admin (but known) card AAAAAAAA. Returns 1 to indicate the save was ok
-				(non-admin cards can take devices out of service)
-			    curl --data '' http://babbage:1234/1/status/0/by/AAAAAAAA
+            Sets the status to 0, using non-admin (but known) card AAAAAAAA. Returns 1 to indicate the save was ok
+                (non-admin cards can take devices out of service)
+                curl --data '' http://babbage:1234/1/status/0/by/AAAAAAAA
 
-			Now the status is 0 as the tool has been taken out of service
-				curl http://babbage:1234/1/status
+            Now the status is 0 as the tool has been taken out of service
+                curl http://babbage:1234/1/status
 
             Tries to set status to 1, using non-admin (but knonw) card AAAAAAAA. Returns 0 to indicate the save failed
-				(non-admin cards can not bring devices back into service)
+                (non-admin cards can not bring devices back into service)
                 curl --data '' http://babbage:1234/1/status/1/by/AAAAAAAA
 
-			Tries to set status to 1, using unknown card DOESNOTEXIST. Returns 0 to indicate the save failed
-			    curl --data '' http://babbage:1234/1/status/1/by/DOESNOTEXIST
+            Tries to set status to 1, using unknown card DOESNOTEXIST. Returns 0 to indicate the save failed
+                curl --data '' http://babbage:1234/1/status/1/by/DOESNOTEXIST
 
-			The status is now still 0 as the tool has been taken out of service above, and the attempts
-				by AAAAAAAA and DOESNOTEXIST have failed
-				curl http://babbage:1234/1/status
+            The status is now still 0 as the tool has been taken out of service above, and the attempts
+                by AAAAAAAA and DOESNOTEXIST have failed
+                curl http://babbage:1234/1/status
 
-			Returns the status to 1, using admin card 00000001. Returns 1 to indicate the save was ok
-			    curl --data '' http://babbage:1234/1/status/1/by/00000001
-			
-			Now the status is back to 1:
-				curl http://babbage:1234/1/status
+            Returns the status to 1, using admin card 00000001. Returns 1 to indicate the save was ok
+                curl --data '' http://babbage:1234/1/status/1/by/00000001
+            
+            Now the status is back to 1:
+                curl http://babbage:1234/1/status
 
         
     */
     public function change_status() {
-        $acnode_id 	= (int) $this->uri->segment(1);
-        $new_status	= (int) $this->uri->segment(3);
+        $acnode_id     = (int) $this->uri->segment(1);
+        $new_status    = (int) $this->uri->segment(3);
         $card_unique_identifier = $this->uri->segment(5);
 
-		/* First, find the user associated with the card for logging purposes */
-		$user_id = $this->Card_model->get_user_id_for_card_unique_identifier($card_unique_identifier);
+        /* First, find the user associated with the card for logging purposes */
+        $user_id = $this->Card_model->get_user_id_for_card_unique_identifier($card_unique_identifier);
 
-		/* If the user is bringing the device back into service, check that they are an administrator */
-		if ($new_status == 1) {
-	        if ($this->Card_model->get_permission($acnode_id, $card_unique_identifier) == NODE_ACCESS_ADMIN) {
-	            $this->Tool_model->set_tool_status_for_acnode_id($acnode_id, $new_status);
-	            $this->Tool_model->log_usage($acnode_id, $user_id, $card_unique_identifier, 'Tool brought back into service', 0);
-	            $this->response(RESPONSE_SUCCESS);
-	        } else {
-	            $this->Tool_model->log_usage($acnode_id, $user_id, $card_unique_identifier, 'Non-admin / unknown user tried to bring tool back into service', 0);
-	            $this->response(RESPONSE_FAILURE);
-	        }
-		} else {
-			/*
-				Someone is taking the device out of service. If it's a known user, change the status (even if they don't have any
-				permissions for the tool). We log a message so we know whom took it out of service.
-				
-				If the card isn't for a known user, deny the request and log a message.
-			*/
-			if ($user_id) {
-				$this->Tool_model->set_tool_status_for_acnode_id($acnode_id, $new_status);
-	            $this->Tool_model->log_usage($acnode_id, $user_id, $card_unique_identifier, 'Tool taken out of service', 0);
-	            $this->response(RESPONSE_SUCCESS);
-			} else {
-	            $this->Tool_model->log_usage($acnode_id, NULL, $card_unique_identifier, 'Unknown card attempted to mark tool as out-of-service', 0);
-	            $this->response(RESPONSE_FAILURE);
-			}
-		}
+        /* If the user is bringing the device back into service, check that they are an administrator */
+        if ($new_status == 1) {
+            if ($this->Card_model->get_permission($acnode_id, $card_unique_identifier) == NODE_ACCESS_ADMIN) {
+                $this->Tool_model->set_tool_status_for_acnode_id($acnode_id, $new_status);
+                $this->Tool_model->log_usage($acnode_id, $user_id, $card_unique_identifier, 'Tool brought back into service', 0);
+                $this->response(RESPONSE_SUCCESS);
+            } else {
+                $this->Tool_model->log_usage($acnode_id, $user_id, $card_unique_identifier, 'Non-admin / unknown user tried to bring tool back into service', 0);
+                $this->response(RESPONSE_FAILURE);
+            }
+        } else {
+            /*
+                Someone is taking the device out of service. If it's a known user, change the status (even if they don't have any
+                permissions for the tool). We log a message so we know whom took it out of service.
+                
+                If the card isn't for a known user, deny the request and log a message.
+            */
+            if ($user_id) {
+                $this->Tool_model->set_tool_status_for_acnode_id($acnode_id, $new_status);
+                $this->Tool_model->log_usage($acnode_id, $user_id, $card_unique_identifier, 'Tool taken out of service', 0);
+                $this->response(RESPONSE_SUCCESS);
+            } else {
+                $this->Tool_model->log_usage($acnode_id, NULL, $card_unique_identifier, 'Unknown card attempted to mark tool as out-of-service', 0);
+                $this->response(RESPONSE_FAILURE);
+            }
+        }
     }
 
 
