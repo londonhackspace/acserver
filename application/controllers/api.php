@@ -501,6 +501,9 @@ class Api extends CI_Controller {
 
     
     protected function response($data) {
+        //Content-Length required for the ACnode
+        $this->output
+            ->set_header("Content-Length: ". strlen($data));
         echo $data;
     }
 
