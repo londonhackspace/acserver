@@ -18,7 +18,8 @@
         }
         
         public function add_permissions_with_card($acnode_id, $card_to_add_unique_id, $added_by_unique_card_id) {
-
+            
+          
             // Gather the required fields
             $user_id = $this->get_user_id_for_card_unique_identifier($card_to_add_unique_id);
             if (!isset($user_id)) {
@@ -36,6 +37,9 @@
                 error_log("Acnode ID ($acnode_id) does not have an associated tool id?");
                 return FALSE;
             }
+            
+            //remove previous entries (controller checks if the user already had higher permissions)
+            $this->db->where(array('user_id'=> $user_id, 'tool_id' => $tool_id))->delete('permissions');
             
             // Insert the data into the permissions table
             error_log("Inserting permissions for new card");
