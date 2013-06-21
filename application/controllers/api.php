@@ -505,7 +505,9 @@ class Api extends CI_Controller {
         $this->output
             ->set_header("Content-Length: ". strlen($data));
         echo $data;
-        exit;
+        $this->CI =& get_instance(); 
+        $this->CI->output->_display();
+        die();
     }
 
 }
