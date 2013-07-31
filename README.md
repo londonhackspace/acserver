@@ -6,6 +6,8 @@ Protocol loosely based on http://wiki.london.hackspace.org.uk/view/Project:Tool_
 
 Status: Done, but not yet fully tested
 
+Progress:
+
 - [X] Sync with membership json file
 - [X] [Get Card Permission](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Get_card_permissions)
 - [X] [Add Card](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Add_card)
@@ -15,6 +17,10 @@ Status: Done, but not yet fully tested
 - [X] [Tool Usage (live)](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28live.29)
 - [X] [Tool Usage (usage time)](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28usage_time.29)
 - [X] [Case Alter](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Case_alert)
+
+Roadmap
+
+- [ ] show maintainers per tool: web gui to show maintainers per tool
 
 
 Usage:
