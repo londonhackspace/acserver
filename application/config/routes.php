@@ -44,6 +44,7 @@ $route['default_controller'] = "api";
 
 // Sync with membership file
 $route['update_from_carddb'] = "api/update_from_carddb";
+$route['batch_update_from_carddb'] = "api/batch_update_from_carddb";
 
 
 // Get Card Permission
