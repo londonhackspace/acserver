@@ -28,6 +28,8 @@ Install:
 * Requires nginx, php5, php5-mysql, php5-fpm, mysqld
 * Copy acserver.nginx to /etc/nginx/sites-available/acserver
 * Run ln -s /etc/nginx/sites-enabled/acserver /etc/nginx/sites-available/acserver
+* Generate MySQL Database using something
+* Move application/config/database.php.blank to application/config/database.php and modify with your mysql config
 * Start php5-fpm and nginx
 
 Usage:
