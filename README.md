@@ -4,7 +4,7 @@ Access Control Server
 A RESTful server that works with the Access Control Nodes (https://github.com/solexious/ACNode)
 Protocol loosely based on http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal
 
-Status: Done, but not yet fully tested
+Status: Done, in production
 
 Progress:
 
@@ -21,7 +21,6 @@ Progress:
 Roadmap
 
 - [ ] show maintainers per tool: web gui to show maintainers per tool
-
 
 Install:
 ========
