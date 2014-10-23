@@ -23,8 +23,13 @@ Roadmap
 - [ ] show maintainers per tool: web gui to show maintainers per tool
 
 
+Install:
+========
+* Requires nginx, php5, php5-mysql, php5-fpm, mysqld
+* Copy acserver.nginx to /etc/nginx/sites-available/acserver
+* Run ln -s /etc/nginx/sites-enabled/acserver /etc/nginx/sites-available/acserver
+* Start php5-fpm and nginx
+
 Usage:
 ======
 * See the comments in application/controllers/api.php for usage examples.
-
-For testing it's installed on babbage port 1234
