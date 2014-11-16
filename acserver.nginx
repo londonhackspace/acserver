@@ -1,0 +1,65 @@
+server {
+    
+    listen 1234;
+    server_name _;
+    root /var/www/acserver;
+    # rewrite_log on
+    error_log /var/log/nginx/acserver_error.log info;
+	index index.php index.html index.htm;
+    # enforce NO www
+    gzip off;
+
+    keepalive_timeout     0;
+    send_timeout          1;
+    if ($host ~* ^www\.(.*))
+    {
+        set $host_without_www $1;
+        rewrite ^/(.*)$ $scheme://$host_without_www/$1 permanent;
+    }
+ 
+    # canonicalize codeigniter url end points
+    # if your default controller is something other than "welcome" you should change the following
+    if ($request_uri ~* ^(/welcome(/index)?|/index(.php)?)/?$)
+    {
+        rewrite ^(.*)$ / permanent;
+    }
+ 
+    # removes trailing "index" from all controllers
+    if ($request_uri ~* index/?$)
+    {
+        rewrite ^/(.*)/index/?$ /$1 permanent;
+    }
+ 
+    # removes trailing slashes (prevents SEO duplicate content issues)
+    #if (!-d $request_filename)
+    #{
+    #    rewrite ^/(.+)/$ /$1 permanent;
+    #}
+ 
+    # removes access to "system" folder, also allows a "System.php" controller
+    if ($request_uri ~* ^/system)
+    {
+        rewrite ^/(.*)$ /index.php?/$1 last;
+        break;
+    }
+ 
+    # unless the request is for a valid file (image, js, css, etc.), send to bootstrap
+    if (!-e $request_filename)
+    {
+        rewrite ^/(.*)$ /index.php?/$1 last;
+        break;
+    }
+ 
+    # catch all
+    error_page 404 /index.php;
+ 
+    location ~ \.php$ {
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass  unix:/var/run/php5-fpm.sock;
+        fastcgi_index index.php;
+	fastcgi_buffer_size 16k;
+	fastcgi_buffers 4 16k;
+        fastcgi_param SCRIPT_FILENAME /var/www/acserver$fastcgi_script_name;
+    }
+}
+

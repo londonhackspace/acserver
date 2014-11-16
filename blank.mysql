@@ -1,0 +1,136 @@
+-- MySQL dump 10.13  Distrib 5.1.73, for debian-linux-gnu (i486)
+--
+-- Host: localhost    Database: acserver
+-- ------------------------------------------------------
+-- Server version	5.1.73-0ubuntu0.10.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `acnodes`
+--
+
+DROP TABLE IF EXISTS `acnodes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `acnodes` (
+  `acnode_id` int(11) NOT NULL,
+  `unique_identifier` varchar(30) NOT NULL,
+  `shared_secret` varchar(36) NOT NULL,
+  `tool_id` int(11) NOT NULL,
+  PRIMARY KEY (`acnode_id`),
+  UNIQUE KEY `tool_id` (`tool_id`),
+  UNIQUE KEY `acnodes` (`acnode_id`),
+  CONSTRAINT `FK_acnodes_tool_id` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cards`
+--
+
+DROP TABLE IF EXISTS `cards`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cards` (
+  `card_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `card_unique_identifier` varchar(15) NOT NULL,
+  `last_used` datetime DEFAULT NULL,
+  PRIMARY KEY (`card_id`),
+  UNIQUE KEY `cards` (`card_id`),
+  KEY `FK_cards_user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=570759982 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `permissions`
+--
+
+DROP TABLE IF EXISTS `permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permissions` (
+  `tool_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `last_used` datetime DEFAULT NULL,
+  `added_by_user_id` int(11) DEFAULT NULL,
+  `added_on` datetime NOT NULL,
+  `permission` int(1) NOT NULL,
+  KEY `FK_permissions_tool_id` (`tool_id`),
+  KEY `FK_permissions_user_id` (`user_id`),
+  KEY `FK_permissions_added_by_user_id` (`added_by_user_id`),
+  CONSTRAINT `FK_permissions_tool_id` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tools`
+--
+
+DROP TABLE IF EXISTS `tools`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tools` (
+  `tool_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `status` int(1) NOT NULL,
+  `status_message` varchar(120) DEFAULT NULL,
+  PRIMARY KEY (`tool_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `toolusage`
+--
+
+DROP TABLE IF EXISTS `toolusage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `toolusage` (
+  `tool_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `card_unique_identifier` varchar(15) DEFAULT NULL,
+  `logged_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `logged_event` varchar(25) NOT NULL,
+  `time` int(11) NOT NULL DEFAULT '0',
+  KEY `FK_toolusage_tool_id` (`tool_id`),
+  KEY `FK_toolusage_user_id` (`user_id`),
+  CONSTRAINT `FK_toolusage_tool_id` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `nick` varchar(50) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5741 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
