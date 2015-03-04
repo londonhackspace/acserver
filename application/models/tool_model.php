@@ -47,5 +47,15 @@
             }
             $this->log_usage($acnode_id, NULL, NULL, $narrative, 0);
         }
+        
+        public function get_last_tool_status($tool_id) {
+            
+            $query = $this->db->order_by("logged_at","desc")->limit(1)
+                    ->get_where('toolusage',array('tool_id' => $tool_id));
+
+            $row = $query->row_array();
+            
+            return $row['logged_event'];
+        }
     }
 ?>
