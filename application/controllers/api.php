@@ -524,6 +524,36 @@ class Api extends CI_Controller {
         $this->response(RESPONSE_SUCCESS);
     }
 
+    
+        /*
+        TITLE: Is tool in use ()
+
+        DESCRIPTION:
+            Returns weather someone is using the tool at this very moment
+            
+        URL STRUCTURE:
+            GET /[nodeID]/is_tool_in_use
+
+        DESCRIPTION URL:
+            https://github.com/londonhackspace/acserver/issues/8
+            
+        EXAMPLES:
+            (Using test data set)
+            
+            Checks wether the tool is in use. Returns 1 if it is, 0 if not.
+                curl  http://acserver:1234/1/is_tool_in_use
+        
+    */
+    public function is_tool_in_use() {
+        $tool_id = (int) $this->uri->segment(1);
+         
+        $logged_event = $this->Tool_model->get_last_tool_status($tool_id);
+        
+        //$this->Tool_model->log_usage($acnode_id, $user_id, $card_unique_identifier, 'Time Used', $time_used);
+        //$this->response(RESPONSE_SUCCESS);
+        //$this->response($logged_event);
+        echo ($logged_event == "Access Started")? "yes":"no" ;
+    }
 
     
     protected function response($data) {

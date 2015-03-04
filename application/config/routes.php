@@ -93,6 +93,11 @@ $route[':num/tooluse/time/for/:any/:num'] = "api/toolusetime";
 // http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Case_alert
 $route[':num/case/:any'] = "api/case_change";
 
+// Is tool in use
+// Reports wether the tool is being used
+// https://github.com/londonhackspace/acserver/issues/8
+$route[':num/is_tool_in_use'] = "api/is_tool_in_use";
+
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
