@@ -530,9 +530,12 @@ class Api extends CI_Controller {
 
         DESCRIPTION:
             Returns weather someone is using the tool at this very moment
+            Not meant to be called by acnodes. 
+            Does not (yet) check if the tool is out of use, use your common sense
+             
             
         URL STRUCTURE:
-            GET /[nodeID]/is_tool_in_use
+            GET /[toolID]/is_tool_in_use
 
         DESCRIPTION URL:
             https://github.com/londonhackspace/acserver/issues/8
@@ -540,7 +543,7 @@ class Api extends CI_Controller {
         EXAMPLES:
             (Using test data set)
             
-            Checks wether the tool is in use. Returns 1 if it is, 0 if not.
+            Checks wether the tool is in use. Returns "yes" if it is, "no" if not.
                 curl  http://acserver:1234/1/is_tool_in_use
         
     */
