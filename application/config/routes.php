@@ -98,6 +98,12 @@ $route[':num/case/:any'] = "api/case_change";
 // https://github.com/londonhackspace/acserver/issues/8
 $route[':num/is_tool_in_use'] = "api/is_tool_in_use";
 
+//Tools for user
+// Return JSON list of tools a user has access to given ID
+// Requires a valid API key
+$route['api/tools_for_user/:num'] = "api/get_tools_for_user";
+$route['api/get_tools_summary_for_user/:num'] = "api/get_tools_summary_for_user";
+
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
