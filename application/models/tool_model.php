@@ -55,7 +55,38 @@
 
             $row = $query->row_array();
             
-            return $row['logged_event'];
+            if(!empty($row))
+                return  $row['logged_event'];
+            else
+                return null;
         }
+        
+        public function get_all_tools() {
+            
+            
+            $query = $this->db->get_where('tools',array('tool_id <>' => '999'));
+            
+            if(!empty($query->result_array()))
+                return $query->result_array();
+            else
+                return null;
+        }
+        
+        public function get_all_tools_for_user($user_id) {
+            
+            
+            $this->db->select('tools.tool_id, tools.name, tools.status, tools.status_message,permissions.permission');
+            $this->db->join('permissions', 
+                    'permissions.tool_id = tools.tool_id AND user_id='.$user_id,'left outer');
+           
+            $query = $this->db->get_where('tools',array('tools.tool_id <>' => '999'));
+            
+            if(!empty($query->result_array()))
+                return $query->result_array();
+            else
+                return null;
+        }
+
+        
     }
 ?>

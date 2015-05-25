@@ -17,10 +17,15 @@ Progress:
 - [X] [Tool Usage (live)](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28live.29)
 - [X] [Tool Usage (usage time)](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Tool_usage_.28usage_time.29)
 - [X] [Case Alter](http://wiki.london.hackspace.org.uk/view/Project:Tool_Access_Control/Solexious_Proposal#Case_alert)
-
-Roadmap
-
+- [X] Look up the state of the tools and if they are currently in use
 - [ ] show maintainers per tool: web gui to show maintainers per tool
+- [ ] Maintainers: Review the log of people who have used the machine
+- [ ] Maintainers: Mark the equipment out of order
+- [ ] Maintainers: Assign new maintainers
+- [ ] Temporarily suspend users from access to tools
+- [ ] Admins: All access that maintainer permissions grant
+- [ ] Admins: Add new tools
+- [ ] Admins: Assign maintainers to tools
 
 Install:
 ========

@@ -552,13 +552,114 @@ class Api extends CI_Controller {
          
         $logged_event = $this->Tool_model->get_last_tool_status($tool_id);
         
-        //$this->Tool_model->log_usage($acnode_id, $user_id, $card_unique_identifier, 'Time Used', $time_used);
-        //$this->response(RESPONSE_SUCCESS);
-        //$this->response($logged_event);
         echo ($logged_event == "Access Started")? "yes":"no" ;
     }
+    /*
+        TITLE: Get tools for user
 
-    
+        DESCRIPTION:
+            TODO
+             
+            
+        URL STRUCTURE:
+            GET /api/get_tools_for_user/[user-id]
+
+        DESCRIPTION URL:
+            
+            
+        EXAMPLES:
+            (Using test data set)
+            
+            Checks wether the tool is in use. Returns "yes" if it is, "no" if not.
+                curl  http://acserver:1234/api/get_tools_for_user/1388
+        
+    */
+    public function get_tools_for_user() {
+        //First check Api-Key header, issue 401 Unauthorised if not a match!
+        if ( ! $this->input->get_request_header('Api-Key', TRUE) 
+                  == $config['web-api-key'])
+        { 
+            header("HTTP/1.0 401 Forbidden");
+            die();
+        }
+        
+        $user_id = (int) $this->uri->segment(3);
+       
+        $tools = $this->User_model->get_tools_for_user($user_id);
+       
+        echo json_encode($tools);
+    }
+        /*
+        TITLE: Get tools summary for user
+
+        DESCRIPTION:
+            Get a the toolnames, status(and usage), status messages and user 
+        permissions.
+        Requires matching API key that's specified in the config file
+             
+            
+        URL STRUCTURE:
+            GET /api/get_tools_summary_for_user/[user-id]
+
+        DESCRIPTION URL:
+            
+            
+        EXAMPLES:
+            (Using test data set)
+            
+            Checks wether the tool is in use. Returns "yes" if it is, "no" if not.
+                curl  http://acserver:1234/api/get_tools_summary_for_user/1388
+        
+        */
+        public function get_tools_summary_for_user() {
+        //First check Api-Key header, issue 401 Unauthorised if not a match!
+        if ( ! $this->input->get_request_header('Api-Key', TRUE) 
+                  == $this->config->item('web-api-key'))
+        { 
+            header("HTTP/1.0 401 Forbidden");
+//            die();
+        }
+        
+        $user_id = (int) $this->uri->segment(3);
+
+        $verbose_output = array();
+        $tools = $this->Tool_model->get_all_tools_for_user($user_id);
+        foreach ($tools as $tool) {
+            $temp_array =array();
+        $temp_array["name"]=$tool["name"];
+        if(!$tool["status"])
+            $temp_array["status"]="Out of service";
+        else
+            $temp_array["status"]= $this->Tool_model->get_last_tool_status($tool["tool_id"]) == "Access Started"? "In use":"Operational";
+      
+        $temp_array["in_use"]=($this->Tool_model->get_last_tool_status($tool["tool_id"]) == "Access Started")? "yes":"no" ;
+        $temp_array["status_message"]=$tool["status_message"];
+        switch ($tool["permission"]) {
+            case 0:
+                $temp_array["permission"]="un-authorised";
+                break;
+            case 1:
+                $temp_array["permission"]="user";
+                break;
+            case 2:
+                $temp_array["permission"]="maintainer";
+                break;
+            default:
+                $temp_array["permission"]="un-authorised";
+}
+       
+         array_push($verbose_output, $temp_array);
+        }
+        echo json_encode($verbose_output);
+    }
+
+    /*
+        TITLE: response ()
+     * 
+     *  DESCRIPTION: This is an internal function used to predefine the http
+     *    request length so that the first version of acnode didn't fall over.
+     * 
+     */
     protected function response($data) {
         //Content-Length required for the ACnode
         $this->output

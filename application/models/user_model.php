@@ -16,6 +16,22 @@
                 return null;
         }
         
+        public function get_tools_for_user($user_id){
+            $query = $this->db->get_where('permissions',array('user_id' => $user_id));
+            $results=array();
+                        
+            foreach ($query->result_array() as $row)
+            {
+              array_push($results,array("user_id"=> $row['user_id'],
+                   "permission" => $row['permission']));
+            }
+            
+            if(!empty($results))
+                return $results;
+            else
+                return null;
+        }
+        
         public function add_or_update_user($user_id, $user_nick){
             // If the user id is new, we add them, otherwise we force the details
             // to match the authorative source
