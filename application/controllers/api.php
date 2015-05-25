@@ -613,8 +613,8 @@ class Api extends CI_Controller {
         */
         public function get_tools_summary_for_user() {
         //First check Api-Key header, issue 401 Unauthorised if not a match!
-        if ( ! $this->input->get_request_header('Api-Key', TRUE) 
-                  == $this->config->item('web-api-key'))
+        if ( apache_request_headers()["Api-Key"] 
+                  != $this->config->item('web-api-key'))
         { 
             header("HTTP/1.0 401 Forbidden");
             die();

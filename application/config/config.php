@@ -357,6 +357,6 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
-$config['web-api-key'] = '5T9ZVWXJK69YBC60GH7SYQ9SEHC07TNFJNAYVJKW90M0AR0H4T0J5M6J908QFV6M';
+$config['web-api-key'] = 'KEY GOES HERE';
 /* End of file config.php */
 /* Location: ./application/config/config.php */
