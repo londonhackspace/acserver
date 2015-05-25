@@ -617,7 +617,7 @@ class Api extends CI_Controller {
                   == $this->config->item('web-api-key'))
         { 
             header("HTTP/1.0 401 Forbidden");
-//            die();
+            die();
         }
         
         $user_id = (int) $this->uri->segment(3);
