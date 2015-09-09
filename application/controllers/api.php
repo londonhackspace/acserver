@@ -113,10 +113,10 @@ class Api extends CI_Controller {
             Returns 1, as this is a NORMAL user card:
                 curl http://babbage:1234/1/card/AAAAAAAA
             
-            Returns 0, as this is an un-authorised card (assuming you haven't authorised it in testing)
+            Returns REGISTERED, as this is an un-authorised card (assuming you haven't authorised it in testing)
                 curl http://babbage:1234/1/card/BABABABA
 
-            Returns 0, as this is an unknown card
+            Returns UNKNOWN, as this is an unknown card
                 curl http://babbage:1234/1/card/JKLMNOP
     */
     public function card() {
@@ -128,7 +128,13 @@ class Api extends CI_Controller {
         // If we've correctly been presented with a node and a card, then check to see what
         // permission is associated with it
         if (isset($acnode_id) && isset($card_unique_identifier)) {
-            $result = $this->Card_model->get_permission($acnode_id, $card_unique_identifier);
+	    $result = $this->Card_model->get_card_status($card_unique_identifier);
+	    if ($result == 'REGISTERED') {
+	       $permission = $this->Card_model->get_permission($acnode_id, $card_unique_identifier);
+	       if ($permission > 0) {
+	       	  $result = $permission;
+	       }
+	    }       
         } else {
             error_log("Cannot parse query string to determine the Node ($acnode_id) and Card ($card_unique_identifier) values to check");
         }

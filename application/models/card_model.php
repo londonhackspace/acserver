@@ -124,5 +124,19 @@
             }
         }
 
+        /* Check if this card is registered to a user in the system */
+        public function get_card_status($card_unique_identifier) {
+            $this->db->select('card_id');
+            $this->db->from('cards');
+            $this->db->where('cards.card_unique_identifier', $card_unique_identifier);
+            $this->db->where('cards.user_id IS NOT NULL');
+            $query = $this->db->get();
+
+            if ($query->num_rows() == 0) {
+                return 'UNKNOWN';
+            } else {
+                return 'REGISTERED';
+            }
+        }
     }
 ?>
