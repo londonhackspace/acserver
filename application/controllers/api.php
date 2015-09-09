@@ -116,19 +116,23 @@ class Api extends CI_Controller {
             Returns 0, as this is an un-authorised card (assuming you haven't authorised it in testing)
                 curl http://babbage:1234/1/card/BABABABA
 
-            Returns 0, as this is an unknown card
+            Returns -1, as this is an unknown card
                 curl http://babbage:1234/1/card/JKLMNOP
     */
     public function card() {
         $acnode_id = (int) $this->uri->segment(1);
         $card_unique_identifier = $this->uri->segment(3);
         $this->uri->segment(3) . "\n";
-        $result = NODE_ACCESS_DENIED;           // Default is to deny access
+        $result = NODE_UNKNOWN_CARD;           // Default is to say that this card is unknown, and deny access
         
         // If we've correctly been presented with a node and a card, then check to see what
         // permission is associated with it
         if (isset($acnode_id) && isset($card_unique_identifier)) {
-            $result = $this->Card_model->get_permission($acnode_id, $card_unique_identifier);
+	    $result = $this->Card_model->get_card_status($card_unique_identifier);
+	    if ($result == 0) {
+               // This is a hackspace member, let's see if they're entitled to using this tool.
+	       $result = $this->Card_model->get_permission($acnode_id, $card_unique_identifier);
+	    }
         } else {
             error_log("Cannot parse query string to determine the Node ($acnode_id) and Card ($card_unique_identifier) values to check");
         }

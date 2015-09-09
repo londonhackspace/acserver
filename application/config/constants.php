@@ -45,6 +45,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('RESPONSE_FAILURE',		    0);
 define('RESPONSE_SUCCESS',		    1);
 
+define('NODE_UNKNOWN_CARD',         -1);
 define('NODE_ACCESS_DENIED',		0);
 define('NODE_ACCESS_STANDARD',	    1);
 define('NODE_ACCESS_ADMIN',	        2);
