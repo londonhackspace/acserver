@@ -7,7 +7,8 @@
 # you're doing.
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
-  config.vm.network "public_network"
+  config.vm.network "forwarded_port", guest: 3306, host: 3306
+  config.vm.network "forwarded_port", guest: 1234, host: 1234
   config.vm.provision :shell, path: 'bootstrap.sh'
   config.vm.hostname = 'acserver-test'
 end
