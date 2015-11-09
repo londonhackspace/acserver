@@ -86,9 +86,11 @@ class Api extends CI_Controller {
     public function batch_update_from_carddb() {
         //$carddb_str = file_get_contents("/var/run/carddb.json");
         $carddb_str = file_get_contents("https://london.hackspace.org.uk/carddb.php");
-        $user_card_data = json_decode($carddb_str, true);
-        
-        $this->response($this->User_model->batch_sync($user_card_data));
+
+	if ($carddb_str) {
+            $user_card_data = json_decode($carddb_str, true);
+            $this->response($this->User_model->batch_sync($user_card_data));
+        }
     }
 
 

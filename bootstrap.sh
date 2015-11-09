@@ -3,7 +3,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # packages
 apt-get update
-apt-get install -y mysql-server-5.5 php5-mysql git nginx php5-fpm
+apt-get install -y mysql-server-5.5 php5-mysql git nginx php5-fpm php5-cli
 
 # database
 echo "
