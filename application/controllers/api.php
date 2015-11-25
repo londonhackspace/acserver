@@ -589,6 +589,57 @@ class Api extends CI_Controller {
        
         echo json_encode($tools);
     }
+    /*
+        TITLE: Get tools statuses
+
+        DESCRIPTION:
+            Lists the status for each tool.
+
+        URL STRUCTURE:
+            GET /api/get_tools_status
+
+        DESCRIPTION URL:
+
+
+        EXAMPLES:
+            (Using test data set)
+
+            Gets all the tools' statuses. Returns:
+            {
+            	'status': 'Operational|Out of service|In use',
+            	'status_message': 'message (optional)',
+            	'name': 'Laser Cutter',
+            	'in_use': 'yes|no'
+            }
+                curl  http://acserver:1234/api/get_tools_status
+
+    */
+    public function get_tools_status() {
+        //First check Api-Key header, issue 401 Unauthorised if not a match!
+        if ( apache_request_headers()["Api-Key"] != $this->config->item('web-api-key')) {
+            header("HTTP/1.0 401 Forbidden");
+            die();
+        }
+
+        $output = array();
+        $tools = $this->Tool_model->get_all_tools();
+        foreach ($tools as $tool) {
+            $inUse = $this->Tool_model->get_last_tool_status($tool["tool_id"]) == "Access Started";
+            $data = array();
+            $data["name"] = $tool["name"];
+            if (!$tool["status"]) {
+                $data["status"] = "Out of service";
+            } else {
+                $data["status"] = $inUse ? "In use" : "Operational";
+            }
+            $data["status_message"] = $tool["status_message"];
+
+            $data["in_use"] = $inUse ? "yes" : "no";
+
+            array_push($output, $data);
+        }
+        echo json_encode($output);
+    }
         /*
         TITLE: Get tools summary for user
 
