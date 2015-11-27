@@ -636,7 +636,7 @@ class Api extends CI_Controller {
         $temp_array["status_message"]=$tool["status_message"];
         switch ($tool["permission"]) {
             case 0:
-                $temp_array["permission"]="un-authorised";
+                $temp_array["permission"]="unauthorised";
                 break;
             case 1:
                 $temp_array["permission"]="user";
