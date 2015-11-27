@@ -104,6 +104,10 @@ $route[':num/is_tool_in_use'] = "api/is_tool_in_use";
 $route['api/tools_for_user/:num'] = "api/get_tools_for_user";
 $route['api/get_tools_summary_for_user/:num'] = "api/get_tools_summary_for_user";
 
+// Tools Statuses
+// Returns JSON list of tools with their current status
+// Requires a valid API key
+$route['api/get_tools_status'] = 'api/get_tools_status';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

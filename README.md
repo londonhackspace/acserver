@@ -27,8 +27,17 @@ Progress:
 - [ ] Admins: Add new tools
 - [ ] Admins: Assign maintainers to tools
 
-Install:
-========
+Instructions (vagrant):
+=======================
+
+* Install vagrant (https://www.vagrantup.com/)
+* check out this repository and change the working directory to the local copy
+* run `vagrant up`
+
+The VM forwards the acserver HTTP server on port 1234 and mysql (3306), for use with [acnode python tests](https://github.com/londonhackspace/acnode-python-tests).
+
+Install manually:
+=================
 * Requires nginx, php5, php5-mysql, php5-fpm, mysqld
 * Copy acserver.nginx to /etc/nginx/sites-available/acserver
 * Run ln -s /etc/nginx/sites-enabled/acserver /etc/nginx/sites-available/acserver
